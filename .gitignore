@@ -1,0 +1,4 @@
+*.js
+!/poi.config.js
+!/jest.config.js
+!/dist/*
