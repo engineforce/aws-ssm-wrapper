@@ -124,19 +124,14 @@ module.exports = require("lodash/filter");
 /***/ }),
 /* 3 */
 /*!*****************************************!*\
-  !*** ./node_modules/async-lib/index.js ***!
+  !*** external "@engineforce/async-lib" ***!
   \*****************************************/
 /*! no static exports found */
 /*! exports used: asyncMap */
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-module.exports = {
-    parallel: __webpack_require__(/*! ./parallel */ 5),
-    serial: __webpack_require__(/*! ./serial */ 6),
-    queue: __webpack_require__(/*! ./queue */ 7)
-};
-
+module.exports = require("@engineforce/async-lib");
 
 /***/ }),
 /* 4 */
@@ -148,171 +143,17 @@ module.exports = {
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/paul.li/my/git/engineforce/libs/packages/aws-ssm-wrapper/index.js */8);
+module.exports = __webpack_require__(/*! /Users/pongli/my/git/engineforce/libs/packages/aws-ssm-wrapper/index.js */5);
 
 
 /***/ }),
 /* 5 */
-/*!********************************************!*\
-  !*** ./node_modules/async-lib/parallel.js ***!
-  \********************************************/
-/*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function parallel(producers, collect) {
-    var isArray = Array.isArray(producers);
-    var result = isArray ? [] : {};
-    var keys = Object.keys(producers);
-    var pending = keys.length;
-    var hasCollect = typeof collect === 'function';
-    var producer;
-    keys.forEach(function (key) {
-        producer = producers[key];
-        if (typeof producer === 'function') {
-            producer(function (val) {
-                if (!result.hasOwnProperty(key)) {
-                    pending -= 1;
-                    result[key] = val;
-                    if (hasCollect && pending === 0) {
-                        collect(result);
-                    }
-                }
-            }, result, pending, isArray ? +key : key);
-        } else {
-            result[key] = producer;
-            pending -= 1;
-            if (hasCollect && pending === 0) {
-                collect(result);
-            }
-        }
-    });
-}
-
-module.exports = parallel;
-
-
-/***/ }),
-/* 6 */
-/*!******************************************!*\
-  !*** ./node_modules/async-lib/serial.js ***!
-  \******************************************/
-/*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function next(producers, result, pending, index) {
-    var producer;
-    if (pending === 0) {
-        return result;
-    } else {
-        producer = producers[index];
-        if (typeof producer === 'function') {
-            producer(function (val) {
-                if (!result.hasOwnProperty(index)) {
-                    result[index] = val;
-                    next(producers, result, pending -= 1, index += 1);
-                }
-            }, result, pending, index);
-        } else {
-            result[index] = producer;
-            next(producers, result, pending -= 1, index += 1);
-        }
-        return result; // not reachable
-    }
-}
-
-function serial(producers, collect) {
-    var result = next(producers, [], producers.length, 0);
-    if (typeof collect === 'function') { collect(result); }
-}
-
-module.exports = serial;
-
-
-/***/ }),
-/* 7 */
-/*!*****************************************!*\
-  !*** ./node_modules/async-lib/queue.js ***!
-  \*****************************************/
-/*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var slice = Array.prototype.slice;
-
-function NONE() {}
-
-module.exports = function (/*listeners*/) {
-    var pending = slice.call(arguments);
-    var value;
-
-    function set(val) {
-        var newVal, caller;
-        value = val;
-        if (pending.length > 0) {
-            newVal = pending[0];
-            if (typeof newVal === 'function') {
-                caller = newVal;
-                newVal = newVal(value, function (val) {
-                    if (caller === pending[0]) {
-                        if (arguments.length > 0) {
-                            value = val;
-                        }
-                        pending.shift();
-                        set(value);
-                    }
-                }, NONE);
-                if (newVal === undefined) {
-                    return;
-                } else if (newVal === NONE) {
-                    newVal = undefined;
-                }
-            }
-            pending.shift();
-            set(newVal);
-        }
-    }
-
-    function add(/*listeners*/) {
-        var isSettled;
-        if (arguments.length > 0) {
-            isSettled = pending.length < 1;
-            pending.push.apply(pending, slice.call(arguments));
-            if (isSettled) {
-                set(value);
-            }
-        }
-        return add;
-    }
-
-    if (pending.length > 0) {
-        set(value);
-    }
-    return add;
-};
-
-
-/***/ }),
-/* 8 */
 /*!******************************!*\
   !*** ./index.js + 2 modules ***!
   \******************************/
 /*! exports provided: findParameters, putParameters, loadPutParameters, loadFindParameters */
 /*! all exports used */
-/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/async-lib/index.js (<- Module is not an ECMAScript module) */
+/*! ModuleConcatenation bailout: Cannot concat with external "@engineforce/async-lib" (<- Module is not an ECMAScript module) */
 /*! ModuleConcatenation bailout: Cannot concat with external "aws-sdk" (<- Module is not an ECMAScript module) */
 /*! ModuleConcatenation bailout: Cannot concat with external "lodash" (<- Module is not an ECMAScript module) */
 /*! ModuleConcatenation bailout: Cannot concat with external "lodash/filter" (<- Module is not an ECMAScript module) */
@@ -380,8 +221,8 @@ async function _getParameters(options, names) {
 
   return parameters;
 }
-// EXTERNAL MODULE: ./node_modules/async-lib/index.js
-var async_lib = __webpack_require__(3);
+// EXTERNAL MODULE: external "@engineforce/async-lib"
+var async_lib_ = __webpack_require__(3);
 
 // CONCATENATED MODULE: ./src/putParameters.js
 
@@ -395,7 +236,7 @@ function loadPutParameters(options) {
 async function _putParameters(options, input) {
   const oldParameters = external_lodash_default.a.keyBy((await options.findParameters(input.parameters.map(p => p.key))), 'Name');
 
-  await Object(async_lib["asyncMap"])(input.parameters, async parameter => {
+  await Object(async_lib_["asyncMap"])(input.parameters, async parameter => {
     const oldParameter = oldParameters[parameter.key];
 
     if (oldParameter == undefined || oldParameter.Value !== parameter.value) {

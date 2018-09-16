@@ -1,7 +1,7 @@
 import { SSM } from 'aws-sdk';
 import filter from 'lodash/filter';
 import _ from 'lodash';
-import { asyncMap } from 'async-lib';
+import { asyncMap } from '@engineforce/async-lib';
 import { IFindParameters } from './findParameters';
 
 export interface IPutParameters {
