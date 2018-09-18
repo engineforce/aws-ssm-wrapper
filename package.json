@@ -1,6 +1,6 @@
 {
   "name": "@engineforce/aws-ssm-wrapper",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Wrapper for AWS Simple System Manager (SSM)",
   "main": "./dist/index.js",
   "author": "Paul Li",
