@@ -1,6 +1,6 @@
 {
   "name": "@engineforce/aws-ssm-wrapper",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Wrapper for AWS Simple System Manager (SSM)",
   "main": "./dist/index.js",
   "author": "Paul Li",
@@ -11,7 +11,7 @@
     "test-unit": "tsc && jest --testPathPattern \\.unit\\.test\\."
   },
   "dependencies": {
-    "@engineforce/async-lib": "engineforce/async-lib#v0.0.6",
+    "@engineforce/async-lib": "github:engineforce/async-lib#v0.0.7",
     "aws-sdk": "^2.296.0",
     "lodash": "^4.17.10",
     "ramda": "^0.25.0"
